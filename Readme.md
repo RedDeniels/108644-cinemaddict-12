@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Данила Буланов](https://up.htmlacademy.ru/ecmascript/12/user/108644).
-* Наставник: `Неизвестно`.
+* Наставник: [Артем Макаров](https://htmlacademy.ru/profile/deepsick).
 
 ---
 
