@@ -9,8 +9,10 @@ import {createTopRatedListTemplatae} from "./view/top-rated-list";
 import {createMostCommentedListTemplatae} from "./view/most-commented-list";
 import {createStatisticsTemplate} from "./view/statistics";
 import {generateFilm} from "./mock/film";
-import {compareArrays, getRandomNumber} from "./utils";
+import {render, compareArrays, getRandomItems} from "./utils";
+import {createFilmDetailsPopup} from "./view/film-details";
 
+const KEY_CODE_ESC = 27;
 const FILMS_COUNT = 23;
 const FILMS_COUNT_PER_LOAD = 5;
 const FILMS_EXTRA_COUNT = 2;
@@ -21,10 +23,6 @@ const mainElement = bodyElement.querySelector(`.main`);
 const footerElement = bodyElement.querySelector(`.footer`);
 
 const films = new Array(FILMS_COUNT).fill(``).map(generateFilm);
-
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
 
 const renderFilms = (listContainer, films, itemsCount = films.length) => {
   const filmsCountBeforeRender = listContainer.querySelectorAll(`.film-card`).length;
@@ -39,6 +37,44 @@ const renderFilms = (listContainer, films, itemsCount = films.length) => {
 
   newFilms.forEach((film) => {
     render(listContainer, createFilmCardTemplatae(film), `beforeend`);
+    const filmElement = listContainer.lastChild;
+    const filmPosterElement = filmElement.querySelector(`.film-card__poster`);
+    const filmTitleElement = filmElement.querySelector(`.film-card__title`);
+    const filmCommentsCountElement = filmElement.querySelector(`.film-card__comments`);
+
+    const handleFilmsElementsClick = () => {
+      filmPosterElement.removeEventListener(`click`, handleFilmsElementsClick);
+      filmTitleElement.removeEventListener(`click`, handleFilmsElementsClick);
+      filmCommentsCountElement.removeEventListener(`click`, handleFilmsElementsClick);
+
+      render(footerElement, createFilmDetailsPopup(film), `beforeend`);
+
+      const filmDetailsElement = bodyElement.querySelector(`.film-details`);
+      const filmDetailsCloseButtonElement = filmDetailsElement.querySelector(`.film-details__close-btn`);
+
+      const handleCloseFilmDetails = () => {
+        filmDetailsCloseButtonElement.removeEventListener(`click`, handleCloseFilmDetails);
+        document.removeEventListener(`keydown`, handleFilmDetailsKeydownPush);
+        filmDetailsElement.remove();
+
+        filmPosterElement.addEventListener(`click`, handleFilmsElementsClick);
+        filmTitleElement.addEventListener(`click`, handleFilmsElementsClick);
+        filmCommentsCountElement.addEventListener(`click`, handleFilmsElementsClick);
+      };
+
+      const handleFilmDetailsKeydownPush = (evt) => {
+        if (evt.keyCode === KEY_CODE_ESC) {
+          handleCloseFilmDetails();
+        }
+      };
+
+      filmDetailsCloseButtonElement.addEventListener(`click`, handleCloseFilmDetails);
+      document.addEventListener(`keydown`, handleFilmDetailsKeydownPush);
+    };
+
+    filmPosterElement.addEventListener(`click`, handleFilmsElementsClick);
+    filmTitleElement.addEventListener(`click`, handleFilmsElementsClick);
+    filmCommentsCountElement.addEventListener(`click`, handleFilmsElementsClick);
   });
 };
 
@@ -51,19 +87,19 @@ const getSortOfPropertyFilms = (property) => {
   return sortFilms.filter((item) => (item[property] > 0));
 };
 
-const getSortExtraList = (property) => {
-  const sortedExtraFilms = getSortOfPropertyFilms(property);
+const getSortOfCommentsCountFilms = () => {
+  const sortFilms = films.slice().sort((item, itemNext) => (item.comments.length) - itemNext.comments.length);
+  return sortFilms.filter((item) => (item.comments.length));
+};
+
+const getSortExtraList = (sortedExtraFilms) => {
   if (!sortedExtraFilms.length) {
     return;
   }
 
   let finishSortedExtraFilms = [];
   if (compareArrays(sortedExtraFilms, films)) {
-    for (let i = 0; i < FILMS_EXTRA_COUNT; i++) {
-      const randomItem = sortedExtraFilms[getRandomNumber(0, sortedExtraFilms.length)];
-      finishSortedExtraFilms.push(randomItem);
-      sortedExtraFilms.splice(sortedExtraFilms.indexOf(randomItem), 1);
-    }
+    finishSortedExtraFilms = getRandomItems(sortedExtraFilms, FILMS_EXTRA_COUNT);
   } else {
     finishSortedExtraFilms = sortedExtraFilms.slice(-FILMS_EXTRA_COUNT).reverse();
   }
@@ -71,18 +107,17 @@ const getSortExtraList = (property) => {
   return finishSortedExtraFilms;
 };
 
-const renderExtraList = (createListTemplate, property, className) => {
-  const sortedList = getSortExtraList(property);
-
+const renderExtraList = (createListTemplate, sortedList, className) => {
+  const extraSortedList = getSortExtraList(sortedList);
   render(filmsElement, createListTemplate(), `beforeend`);
   const extraListElement = filmsElement.querySelector(`.${className}`);
 
   renderFilmsContainer(extraListElement);
   const extraContainerElement = extraListElement.querySelector(`.films-list__container`);
-  renderFilms(extraContainerElement, sortedList);
+  renderFilms(extraContainerElement, extraSortedList);
 };
 
-const renderMainList = () => {
+const renderMainList = (films) => {
   renderFilmsContainer(filmsMainListElement);
   const filmsMainListContainerElement = filmsMainListElement.querySelector(`.films-list__container`);
 
@@ -112,9 +147,9 @@ render(mainElement, createFilmsMainListTemplatae(), `beforeend`);
 const filmsElement = mainElement.querySelector(`.films`);
 const filmsMainListElement = filmsElement.querySelector(`.films-list`);
 
-renderMainList();
-renderExtraList(createTopRatedListTemplatae, `rating`, `js-top-rated-list`);
-renderExtraList(createMostCommentedListTemplatae, `commentsCount`, `js-most-commented-list`);
+renderMainList(films);
+renderExtraList(createTopRatedListTemplatae, getSortOfPropertyFilms(`rating`), `js-top-rated-list`);
+renderExtraList(createMostCommentedListTemplatae, getSortOfCommentsCountFilms(), `js-most-commented-list`);
 
 const footerStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
