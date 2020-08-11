@@ -16,7 +16,7 @@ export const getRandomSublist = (originalList, count) => {
     newList.push(randomItem);
     list.splice(list.indexOf(randomItem), 1);
   }
-  return newList
+  return newList;
 };
 
 export const getItemsElements = (list, createTemplate) => {
@@ -27,7 +27,7 @@ export const getItemsElements = (list, createTemplate) => {
   return listElements.join(``);
 };
 
-export const compareArrays = (arr1, arr2) => (arr1.length === arr2.length && arr1.every(function(value, index) { return value === arr2[index]}));
+export const compareArrays = (arr1, arr2) => (arr1.length === arr2.length && arr1.every((value, index) => (value === arr2[index])));
 
 export const getMonthName = (date) => (MONTH[date.getMonth()]);
 
