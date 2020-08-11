@@ -8,7 +8,7 @@ export const getRandomNumber = (min = 0, max = 1, approximation = 0) => (Number(
 
 export const getRandomItem = (list) => (list[getRandomNumber(0, list.length - 1)]);
 
-export const getRandomItems = (originalList, count) => {
+export const getRandomSublist = (originalList, count) => {
   let list = originalList.slice();
   let newList = [];
   for (let i = 0; i < count; i++) {

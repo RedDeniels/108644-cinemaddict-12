@@ -1,4 +1,4 @@
-import {getRandomItem, getRandomItems, getRandomNumber} from "../utils";
+import {getRandomItem, getRandomSublist, getRandomNumber} from "../utils";
 import {generateComment} from "./comment";
 
 const TITLES = [
@@ -123,15 +123,15 @@ export const generateFilm = () => ({
   title: getRandomItem(TITLES),
   originalTitle: getRandomItem(ORIGINAL_TITLES),
   director: getRandomItem(DIRECTORS),
-  writers: getRandomItems(WRITERS, getRandomNumber(1, WORKERS_COUNT_MAX)),
-  actors: getRandomItems(ACTORS, getRandomNumber(1, WORKERS_COUNT_MAX)),
+  writers: getRandomSublist(WRITERS, getRandomNumber(1, WORKERS_COUNT_MAX)),
+  actors: getRandomSublist(ACTORS, getRandomNumber(1, WORKERS_COUNT_MAX)),
   country: getRandomItem(COUNTRIES),
   poster: getRandomItem(POSTERS),
   rating: getRandomNumber(0, RATING_MAX, 1),
   date: new Date(getRandomNumber(YEAR_MIN, YEAR_MAX), getRandomNumber(0, 11), getRandomNumber(1, 31)),
   ageRating: getRandomItem(AGE_RATINGS),
   duration: getRandomNumber(DURATION_MIN, DURATION_MAX),
-  genres: getRandomItems(GENRES, GENRES_COUNT_MAX),
+  genres: getRandomSublist(GENRES, GENRES_COUNT_MAX),
   description: generateDescription(DURATION_MAX),
   comments: generateComments(),
 });
