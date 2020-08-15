@@ -1,19 +1,19 @@
 import {createElement} from "../utils";
 
-export default class Statistics {
+export default class SortingList {
   constructor() {
     this._element = null;
   }
 
-  getTemplate(count) {
+  getTemplate() {
     return (
-      `<p>${count} inside</p>`
+      `<ul class="sort"></ul>`
     );
   }
 
-  getElement(count) {
+  getElement() {
     if (!this._element) {
-      this._element = createElement(this.getTemplate(count));
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;

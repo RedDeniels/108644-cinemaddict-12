@@ -1,14 +1,14 @@
 import {createElement} from "../utils";
 
-export default class SortingElement {
-  constructor(type) {
+export default class GenreItem {
+  constructor(title) {
     this._element = null;
-    this._type = type;
+    this._title = title;
   }
 
   getTemplate() {
     return (
-      `<li class="sort__element sort__element--${this._type}"><a href="#" class="sort__button">Sort by ${this._type}</a></li>`
+      `<span class="film-details__genre">${this._title}</span>`
     );
   }
 
