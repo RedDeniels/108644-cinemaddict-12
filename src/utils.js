@@ -1,7 +1,18 @@
-import {MONTHS, MIN_IN_HOUR} from "./const";
+import {MONTHS, MIN_IN_HOUR, RenderPosition} from "./const";
 
-export const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
+export const renderElement = (container, element, place) => {
+  switch (place) {
+    case RenderPosition.BEFORE_END:
+      container.append(element);
+      break;
+  }
+};
+
+export const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
 };
 
 export const getRandomNumber = (min = 0, max = 1, approximation = 0) => Number((Math.random() * (max - min) + min).toFixed(approximation));
@@ -19,12 +30,10 @@ export const getRandomSubarray = (originalArray, count) => {
   return newList;
 };
 
-export const getItemsElements = (items, createTemplate) => {
-  let elements = [];
+export const renderItemsElements = (container, items, View) => {
   for (const item of items) {
-    elements.push(createTemplate(item));
+    renderElement(container, new View(item).getElement(), RenderPosition.BEFORE_END);
   }
-  return elements.join(``);
 };
 
 export const compareArrays = (arr1, arr2) => arr1.length === arr2.length && arr1.every((value, index) => (value === arr2[index]));
