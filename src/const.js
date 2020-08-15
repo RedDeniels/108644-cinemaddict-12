@@ -1,4 +1,4 @@
-export const MONTH = [
+export const MONTHS = [
   `January`,
   `February`,
   `March`,
@@ -13,3 +13,8 @@ export const MONTH = [
   `December`,
 ];
 
+export const KEY_ESC = `Escape`;
+export const MIN_IN_HOUR = 60;
+export const RenderPlace = {
+  BEFORE_END: `beforeend`,
+};

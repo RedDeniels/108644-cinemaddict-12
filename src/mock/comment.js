@@ -10,7 +10,7 @@ const TEXTS = [
   `I am another man after this life changing event, my self is transcended into a state of utter joyful frenzy.`,
 ];
 
-const EMOJI = [
+const EMOJIS = [
   `angry`,
   `puke`,
   `sleeping`,
@@ -27,12 +27,14 @@ const AUTHORS = [
   `Alan Wake`,
 ];
 
-const COMMENTS_YEAR_MIN = 1900;
-const COMMENTS_YEAR_MAX = 2020;
+const CommentYear = {
+  MIN: 1900,
+  MAX: 2020,
+};
 
 export const generateComment = () => ({
   text: getRandomItem(TEXTS),
-  emoji: getRandomItem(EMOJI),
+  emoji: getRandomItem(EMOJIS),
   author: getRandomItem(AUTHORS),
-  date: new Date(getRandomNumber(COMMENTS_YEAR_MIN, COMMENTS_YEAR_MAX), getRandomNumber(11), getRandomNumber(31), getRandomNumber(24), getRandomNumber(60)),
+  date: new Date(getRandomNumber(CommentYear.MIN, CommentYear.MAX), getRandomNumber(11), getRandomNumber(31), getRandomNumber(24), getRandomNumber(60)),
 });

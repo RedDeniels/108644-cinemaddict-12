@@ -1,4 +1,4 @@
-import {getRandomItem, getRandomSublist, getRandomNumber} from "../utils";
+import {getRandomItem, getRandomSubarray, getRandomNumber} from "../utils";
 import {generateComment} from "./comment";
 
 const TITLES = [
@@ -105,17 +105,27 @@ const AGE_RATINGS = [
 
 const RATING_MAX = 10;
 const COMMENTS_COUNT_MAX = 5;
-const DESCRIPTION_PHRASES_MIN = 1;
-const DESCRIPTION_PHRASES_MAX = 5;
-const YEAR_MIN = 1940;
-const YEAR_MAX = 2020;
-const DURATION_MIN = 10;
-const DURATION_MAX = 200;
+
 const WORKERS_COUNT_MAX = 3;
 const GENRES_COUNT_MAX = 4;
 
+const Year = {
+  MIN: 1900,
+  MAX: 2020,
+};
+
+const Duration = {
+  MIN: 10,
+  MAX: 200,
+};
+
+const DescriptionPhrase = {
+  MIN: 1,
+  MAX: 5,
+};
+
 const generateDescription = () => {
-  let description = new Array(getRandomNumber(DESCRIPTION_PHRASES_MIN, DESCRIPTION_PHRASES_MAX)).fill(``);
+  let description = new Array(getRandomNumber(DescriptionPhrase.MIN, DescriptionPhrase.MAX)).fill(``);
   return description.map(() => getRandomItem(DESCRIPTION_PHRASES)).join(` `);
 };
 
@@ -123,17 +133,17 @@ export const generateFilm = () => ({
   title: getRandomItem(TITLES),
   originalTitle: getRandomItem(ORIGINAL_TITLES),
   director: getRandomItem(DIRECTORS),
-  writers: getRandomSublist(WRITERS, getRandomNumber(1, WORKERS_COUNT_MAX)),
-  actors: getRandomSublist(ACTORS, getRandomNumber(1, WORKERS_COUNT_MAX)),
+  writers: getRandomSubarray(WRITERS, getRandomNumber(1, WORKERS_COUNT_MAX)),
+  actors: getRandomSubarray(ACTORS, getRandomNumber(1, WORKERS_COUNT_MAX)),
   country: getRandomItem(COUNTRIES),
   poster: getRandomItem(POSTERS),
   rating: getRandomNumber(0, RATING_MAX, 1),
-  date: new Date(getRandomNumber(YEAR_MIN, YEAR_MAX), getRandomNumber(0, 11), getRandomNumber(1, 31)),
+  date: new Date(getRandomNumber(Year.MIN, Year.MAX), getRandomNumber(0, 11), getRandomNumber(1, 31)),
   ageRating: getRandomItem(AGE_RATINGS),
-  duration: getRandomNumber(DURATION_MIN, DURATION_MAX),
-  genres: getRandomSublist(GENRES, GENRES_COUNT_MAX),
-  description: generateDescription(DURATION_MAX),
+  duration: getRandomNumber(Duration.MIN, Duration.MAX),
+  genres: getRandomSubarray(GENRES, GENRES_COUNT_MAX),
+  description: generateDescription(Duration.MAX),
   comments: generateComments(),
 });
 
-const generateComments = () => (new Array(getRandomNumber(1, COMMENTS_COUNT_MAX)).fill(``).map(generateComment));
+const generateComments = () => new Array(getRandomNumber(1, COMMENTS_COUNT_MAX)).fill(``).map(generateComment);

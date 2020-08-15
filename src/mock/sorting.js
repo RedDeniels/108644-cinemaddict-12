@@ -1,25 +1,35 @@
+export const Type = {
+  DEFAULT: `default`,
+  DATE: `date`,
+  RATING: `rating`,
+};
+
 const sortByDate = (films) => {
-  return films.slice().sort((film, filmNext) => {
+  return [...films].sort((film, filmNext) => {
     if (film.date > filmNext.date) {
       return 1;
-    } else if (film.date < filmNext.date) {
+    }
+
+    if (film.date < filmNext.date) {
       return -1;
     }
     return 0;
   });
 };
 
-export const filmToSortMap = {
-  default: (films) => films,
-  date: sortByDate,
-  rating: (films) => films.slice().sort((film, filmNext) => (film.rating - filmNext.rating)),
+const sortByRating = (films) => [...films].sort((film, filmNext) => (film.rating - filmNext.rating));
+
+export const typeToSorting = {
+  [Type.DEFAULT]: (films) => films,
+  [Type.DATE]: sortByDate,
+  [Type.RATING]: sortByRating,
 };
 
-export const generateSortings = (films) => {
-  return Object.entries(filmToSortMap).map(([sortingTitle, sortFilms]) => {
+export const generateSortings = (films) => (
+  Object.entries(typeToSorting).map(([sortingTitle, sortFilms]) => {
     return {
-      title: sortingTitle,
+      type: sortingTitle,
       films: sortFilms(films),
     };
-  });
-};
+  })
+);

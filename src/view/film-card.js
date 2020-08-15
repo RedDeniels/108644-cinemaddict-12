@@ -2,6 +2,8 @@ import {getDurationString} from "../utils";
 
 const DESCRIPTION_LENGTH = 140;
 
+const cropDescription = (description) => (description.length > DESCRIPTION_LENGTH ? description.slice(0, DESCRIPTION_LENGTH - 1) + `...` : description);
+
 export const createFilmCardTemplatae = (film) => {
   const {title, rating, date, duration, genres, poster, description, comments} = film;
   return (
@@ -24,5 +26,3 @@ export const createFilmCardTemplatae = (film) => {
     </article>`
   );
 };
-
-const cropDescription = (description) => (description.length > DESCRIPTION_LENGTH ? description.slice(0, DESCRIPTION_LENGTH - 1) + `...` : description);
