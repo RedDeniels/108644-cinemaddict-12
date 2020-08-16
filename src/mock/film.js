@@ -129,6 +129,8 @@ const generateDescription = () => {
   return description.map(() => getRandomItem(DESCRIPTION_PHRASES)).join(` `);
 };
 
+const generateComments = () => new Array(getRandomNumber(1, COMMENTS_COUNT_MAX)).fill(``).map(generateComment);
+
 export const generateFilm = () => ({
   title: getRandomItem(TITLES),
   originalTitle: getRandomItem(ORIGINAL_TITLES),
@@ -145,5 +147,3 @@ export const generateFilm = () => ({
   description: generateDescription(Duration.MAX),
   comments: generateComments(),
 });
-
-const generateComments = () => new Array(getRandomNumber(1, COMMENTS_COUNT_MAX)).fill(``).map(generateComment);

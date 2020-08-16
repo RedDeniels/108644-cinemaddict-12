@@ -1,13 +1,14 @@
 import {createElement} from "../utils";
 
 export default class Statistics {
-  constructor() {
+  constructor(count) {
     this._element = null;
+    this._count = count;
   }
 
-  getTemplate(count) {
+  getTemplate() {
     return (
-      `<p>${count} inside</p>`
+      `<p>${this._count} inside</p>`
     );
   }
 
