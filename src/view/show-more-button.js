@@ -11,9 +11,9 @@ export default class ShowMoreButton {
     );
   }
 
-  getElement(count) {
+  getElement() {
     if (!this._element) {
-      this._element = createElement(this.getTemplate(count));
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;

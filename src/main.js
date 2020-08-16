@@ -242,4 +242,4 @@ renderExtraList(new MostCommentedListView().getElement(), getSortOfCommentsCount
 
 const footerStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
-renderElement(footerStatisticsElement, new StatisticsView().getElement(films.length), RenderPosition.BEFORE_END);
+renderElement(footerStatisticsElement, new StatisticsView(films.length).getElement(), RenderPosition.BEFORE_END);

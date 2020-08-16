@@ -17,7 +17,7 @@ export const createElement = (template) => {
 
 export const getRandomNumber = (min = 0, max = 1, approximation = 0) => Number((Math.random() * (max - min) + min).toFixed(approximation));
 
-export const getRandomItem = (array) => array[getRandomNumber(0, array.length - 1)];
+export const getRandomItem = (items) => items[getRandomNumber(0, items.length - 1)];
 
 export const getRandomSubarray = (originalArray, count) => {
   let subArray = [...originalArray];
