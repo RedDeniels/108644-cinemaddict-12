@@ -12,6 +12,7 @@ import CommentView from "./view/comment";
 import ShowMoreButtonView from "./view/show-more-button";
 import MostCommentedListView from "./view/most-commented-list";
 import TopRatedListView from "./view/top-rated-list";
+import FilmsListTitleView from "./view/films-list-title";
 import {generateFilm} from "./mock/film";
 import {generateSortings} from "./mock/sorting";
 import {Type as SortingType} from "./mock/sorting";
@@ -187,6 +188,7 @@ const renderShowButton = () => {
 };
 
 const renderMainList = () => {
+  renderElement(filmsMainListElement, new FilmsListTitleView(Boolean(currentFilms.length)).getElement(), RenderPosition.BEFORE_END);
   renderFilmsContainer(filmsMainListElement);
   const filmsMainListContainerElement = filmsMainListElement.querySelector(`.films-list__container`);
 
