@@ -1,10 +1,7 @@
-import {getRandomNumber, createElement} from "../utils";
+import AbstractView from "./abstract";
+import {getRandomNumber} from "../utils";
 
-export default class Navigation {
-  constructor() {
-    this._element = null;
-  }
-
+export default class Navigation extends AbstractView {
   getTemplate(count) {
     return (
       `<nav class="main-navigation">
@@ -17,17 +14,5 @@ export default class Navigation {
         <a href="#stats" class="main-navigation__additional">Stats</a>
       </nav>`
     );
-  }
-
-  getElement(count) {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate(count));
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
