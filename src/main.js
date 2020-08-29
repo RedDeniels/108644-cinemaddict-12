@@ -17,7 +17,7 @@ import {generateFilm} from "./mock/film";
 import {generateSortings} from "./mock/sorting";
 import {Type as SortingType} from "./mock/sorting";
 import {compareArrays, getRandomSubarray, renderElement, renderItemsElements} from "./utils";
-import {KEY_ESC, RenderPosition} from "./const";
+import {RenderPosition} from "./const";
 
 const FilmsCount = {
   TOTAL: 23,
@@ -47,58 +47,19 @@ const renderFilmDetails = (film) => {
   return filmDetails;
 };
 
+const filmsElementsClick = (filmComponent) => {
+  const filmDetails = renderFilmDetails(filmComponent.getFilm());
+  filmDetails.setFilmCard(filmComponent);
+
+  filmDetails.setCloseClickHandler(closeFilmDetails);
+};
+
+const closeFilmDetails = (filmComponent, filmDetailsElement) => {
+  footerElement.removeChild(filmDetailsElement);
+  filmComponent.setOpenClickHandler(filmsElementsClick);
+};
+
 const renderFilms = (listContainer, actualFilms, itemsCount = actualFilms.length) => {
-  let handleFilmsElementClick;
-
-  const getFilmActiveElements = (filmElement) => {
-    const filmPosterElement = filmElement.querySelector(`.film-card__poster`);
-    const filmTitleElement = filmElement.querySelector(`.film-card__title`);
-    const filmCommentsCountElement = filmElement.querySelector(`.film-card__comments`);
-    return [filmPosterElement, filmTitleElement, filmCommentsCountElement];
-  };
-
-  const addOpenListeners = (filmActiveElements) => {
-    for (const filmActiveElement of filmActiveElements) {
-      filmActiveElement.addEventListener(`click`, handleFilmsElementClick);
-    }
-  };
-
-  const removeOpenListeners = (filmActiveElements) => {
-    for (const filmActiveElement of filmActiveElements) {
-      filmActiveElement.removeEventListener(`click`, handleFilmsElementClick);
-    }
-  };
-
-  const filmsElementsClick = (film, filmActiveElements) => {
-    removeOpenListeners(filmActiveElements);
-    const filmDetails = renderFilmDetails(film);
-
-    const filmDetailsElement = filmDetails.getElement();
-    const filmDetailsCloseButtonElement = filmDetailsElement.querySelector(`.film-details__close-btn`);
-
-    const closeFilmDetails = () => {
-      filmDetailsCloseButtonElement.removeEventListener(`click`, handleCloseFilmDetails);
-      document.removeEventListener(`keydown`, handleFilmDetailsKeydownPush);
-      footerElement.removeChild(filmDetailsElement);
-      filmDetails.removeElement();
-
-      addOpenListeners(filmActiveElements);
-    };
-
-    let handleCloseFilmDetails = closeFilmDetails.bind(null, filmActiveElements);
-
-    const handleFilmDetailsKeydownPush = (event) => {
-      if (event.key !== KEY_ESC) {
-        return;
-      }
-
-      handleCloseFilmDetails(handleCloseFilmDetails);
-    };
-
-    filmDetailsCloseButtonElement.addEventListener(`click`, handleCloseFilmDetails);
-    document.addEventListener(`keydown`, handleFilmDetailsKeydownPush);
-  };
-
   const initialFilmsCount = listContainer.querySelectorAll(`.film-card`).length;
 
   if (initialFilmsCount === actualFilms.length) {
@@ -111,12 +72,12 @@ const renderFilms = (listContainer, actualFilms, itemsCount = actualFilms.length
 
   const newFilms = actualFilms.slice(initialFilmsCount, initialFilmsCount + itemsCount);
 
-  newFilms.forEach((film) => {
-    renderElement(listContainer, new FilmCardView(film).getElement(), RenderPosition.BEFORE_END);
-    const filmElement = listContainer.lastChild;
-    const filmActiveElements = getFilmActiveElements(filmElement);
-    handleFilmsElementClick = filmsElementsClick.bind(null, film, filmActiveElements);
-    addOpenListeners(filmActiveElements);
+  newFilms.forEach((newFilm) => {
+    const filmComponent = new FilmCardView(newFilm);
+
+    renderElement(listContainer, filmComponent.getElement(), RenderPosition.BEFORE_END);
+
+    filmComponent.setOpenClickHandler(filmsElementsClick);
   });
 };
 
@@ -165,11 +126,9 @@ const renderShowButton = () => {
   }
 
   let showMoreButton;
-  let showMoreButtonElement;
+  let showMoreButtonElement = document.querySelector(`.films-list__show-more`);
 
-
-  const handleShowMoreButtonClick = (evt) => {
-    evt.preventDefault();
+  const handleShowMoreButtonClick = () => {
     const filmsMainListContainerElement = filmsMainListElement.querySelector(`.films-list__container`);
     renderFilms(filmsMainListContainerElement, currentFilms, FilmsCount.PER_LOAD);
 
@@ -183,7 +142,7 @@ const renderShowButton = () => {
     showMoreButton = new ShowMoreButtonView();
     showMoreButtonElement = showMoreButton.getElement();
     renderElement(filmsMainListElement, showMoreButton.getElement(), RenderPosition.BEFORE_END);
-    showMoreButtonElement.addEventListener(`click`, handleShowMoreButtonClick);
+    showMoreButton.setClickHandler(handleShowMoreButtonClick);
   }
 };
 
@@ -197,30 +156,26 @@ const renderMainList = () => {
 };
 
 const renderSortingList = () => {
-  const activateSorting = (item, currentSortingElement) => {
+  const activateSorting = (currentSortingFilms, currentSortingElement) => {
     const prevSortingActiveButtonElement = sortingListElement.querySelector(`.sort__button--active`);
     prevSortingActiveButtonElement.classList.remove(`sort__button--active`);
     currentSortingElement.querySelector(`.sort__button`).classList.add(`sort__button--active`);
 
     const filmsListContainerElement = filmsMainListElement.querySelector(`.films-list__container`);
     filmsListContainerElement.innerHTML = ``;
-    currentFilms = item.films;
-    renderFilms(filmsListContainerElement, currentFilms, FilmsCount.PER_LOAD);
+    renderFilms(filmsListContainerElement, currentSortingFilms, FilmsCount.PER_LOAD);
     renderShowButton();
   };
 
-  renderElement(mainElement, new SortingListView().getElement(), RenderPosition.BEFORE_END);
-  const sortingListElement = mainElement.querySelector(`.sort`);
+  const sortingListComponent = new SortingListView();
+  const sortingListElement = sortingListComponent.getElement();
+  renderElement(mainElement, sortingListElement, RenderPosition.BEFORE_END);
 
   sortings.forEach((item) => {
-    const handleSortingClick = (evt) => {
-      evt.preventDefault();
-      activateSorting(item, currentSortingElement, handleSortingClick);
-    };
+    const sortingComponent = new SortingElementView(item.type, item.films);
 
-    renderElement(sortingListElement, new SortingElementView(item.type).getElement(), RenderPosition.BEFORE_END);
-    const currentSortingElement = sortingListElement.lastChild;
-    currentSortingElement.addEventListener(`click`, handleSortingClick);
+    renderElement(sortingListElement, sortingComponent.getElement(), RenderPosition.BEFORE_END);
+    sortingComponent.setClickHandler(activateSorting);
   });
 
   const initialSortingActiveElement = sortingListElement.querySelector(`.sort__element--${INITIAL_SORTING_ACTIVE}`);

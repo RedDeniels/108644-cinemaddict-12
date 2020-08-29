@@ -1,11 +1,14 @@
 import AbstractView from "./abstract";
 import {getMonthName, getDurationString} from "../utils";
+import {KEY_ESC} from "../const";
 
 export default class FilmDetails extends AbstractView {
   constructor(film) {
     super();
 
     this._film = film;
+    this._closeClickHandler = this._closeClickHandler.bind(this);
+    this._escPushHandler = this._escPushHandler.bind(this);
   }
 
   getTemplate() {
@@ -126,6 +129,42 @@ export default class FilmDetails extends AbstractView {
         </form>
       </section>`
     );
+  }
+
+  setFilmCard(filmCard) {
+    this._filmCard = filmCard;
+  }
+
+  getFilmCard() {
+    return this._filmCard;
+  }
+
+  removeCloseClickHandler() {
+    this.getElement().querySelector(`.film-details__close-btn`).removeEventListener(`click`, this._closeClickHandler);
+    document.removeEventListener(`keydown`, this._escPushHandler);
+  }
+
+  _escPushHandler(evt) {
+    if (evt.key !== KEY_ESC) {
+      return;
+    }
+
+    this._callback.closeClick(this.getFilmCard(), this.getElement());
+    this.removeElement();
+    this.removeCloseClickHandler();
+  }
+
+  _closeClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.closeClick(this.getFilmCard(), this.getElement());
+    this.removeElement();
+    this.removeCloseClickHandler();
+  }
+
+  setCloseClickHandler(callback) {
+    this._callback.closeClick = callback;
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closeClickHandler);
+    document.addEventListener(`keydown`, this._escPushHandler);
   }
 }
 

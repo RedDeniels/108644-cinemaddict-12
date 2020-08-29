@@ -10,6 +10,7 @@ export default class FilmCard extends AbstractView {
     super();
 
     this._film = film;
+    this._openClickHandler = this._openClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -32,5 +33,35 @@ export default class FilmCard extends AbstractView {
         </form>
       </article>`
     );
+  }
+
+  getFilm() {
+    return this._film;
+  }
+
+  getActiveElements() {
+    const filmPosterElement = this.getElement().querySelector(`.film-card__poster`);
+    const filmTitleElement = this.getElement().querySelector(`.film-card__title`);
+    const filmCommentsCountElement = this.getElement().querySelector(`.film-card__comments`);
+    return [filmPosterElement, filmTitleElement, filmCommentsCountElement];
+  }
+
+  removeOpenClickHandler() {
+    for (const filmActiveElement of this.getActiveElements()) {
+      filmActiveElement.removeEventListener(`click`, this._openClickHandler);
+    }
+  }
+
+  _openClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.openClick(this);
+    this.removeOpenClickHandler();
+  }
+
+  setOpenClickHandler(callback) {
+    this._callback.openClick = callback;
+    for (const filmActiveElement of this.getActiveElements()) {
+      filmActiveElement.addEventListener(`click`, this._openClickHandler);
+    }
   }
 }

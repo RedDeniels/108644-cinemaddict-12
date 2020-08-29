@@ -7,6 +7,12 @@ const Title = {
 };
 
 export default class FilmsListTitle extends AbstractView {
+  constructor(isFilled) {
+    super();
+
+    this._isFilled = isFilled;
+  }
+
   getTemplate() {
     return (
       `<h2 class="films-list__title ${this._isFilled ? CssClass.HIDDEN : ``}">${this._isFilled ? Title.FILLED : Title.EMPTY}</h2>`
