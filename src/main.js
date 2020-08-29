@@ -16,8 +16,8 @@ import FilmsListTitleView from "./view/films-list-title";
 import {generateFilm} from "./mock/film";
 import {generateSortings} from "./mock/sorting";
 import {Type as SortingType} from "./mock/sorting";
-import {compareArrays, getRandomSubarray, renderElement, renderItemsElements} from "./utils";
-import {RenderPosition} from "./const";
+import {compareArrays, getRandomSubarray} from "./utils/common";
+import {RenderPosition, render, remove, renderItemsElements} from "./utils/render";
 
 const FilmsCount = {
   TOTAL: 23,
@@ -75,14 +75,14 @@ const renderFilms = (listContainer, actualFilms, itemsCount = actualFilms.length
   newFilms.forEach((newFilm) => {
     const filmComponent = new FilmCardView(newFilm);
 
-    renderElement(listContainer, filmComponent.getElement(), RenderPosition.BEFORE_END);
+    render(listContainer, filmComponent, RenderPosition.BEFORE_END);
 
     filmComponent.setOpenClickHandler(filmsElementsClick);
   });
 };
 
 const renderFilmsContainer = (container) => {
-  renderElement(container, new FilmsListContainerView().getElement(), RenderPosition.BEFORE_END);
+  render(container, new FilmsListContainerView(), RenderPosition.BEFORE_END);
 };
 
 const getSortOfPropertyFilms = (property) => {
@@ -112,7 +112,7 @@ const getSortExtraList = (sortedExtraFilms) => {
 
 const renderExtraList = (element, sortedList, className) => {
   const extraSortedList = getSortExtraList(sortedList);
-  renderElement(filmsElement, element, RenderPosition.BEFORE_END);
+  render(filmsElement, element, RenderPosition.BEFORE_END);
   const extraListElement = filmsElement.querySelector(`.${className}`);
 
   renderFilmsContainer(extraListElement);
@@ -133,21 +133,19 @@ const renderShowButton = () => {
     renderFilms(filmsMainListContainerElement, currentFilms, FilmsCount.PER_LOAD);
 
     if (filmsMainListElement.querySelectorAll(`.film-card`).length === films.length) {
-      filmsMainListElement.removeChild(showMoreButtonElement);
-      showMoreButton.removeElement();
+      remove(showMoreButton);
     }
   };
 
   if (!showMoreButtonElement) {
     showMoreButton = new ShowMoreButtonView();
-    showMoreButtonElement = showMoreButton.getElement();
-    renderElement(filmsMainListElement, showMoreButton.getElement(), RenderPosition.BEFORE_END);
+    render(filmsMainListElement, showMoreButton, RenderPosition.BEFORE_END);
     showMoreButton.setClickHandler(handleShowMoreButtonClick);
   }
 };
 
 const renderMainList = () => {
-  renderElement(filmsMainListElement, new FilmsListTitleView(Boolean(currentFilms.length)).getElement(), RenderPosition.BEFORE_END);
+  render(filmsMainListElement, new FilmsListTitleView(Boolean(currentFilms.length)), RenderPosition.BEFORE_END);
   renderFilmsContainer(filmsMainListElement);
   const filmsMainListContainerElement = filmsMainListElement.querySelector(`.films-list__container`);
 
@@ -169,12 +167,12 @@ const renderSortingList = () => {
 
   const sortingListComponent = new SortingListView();
   const sortingListElement = sortingListComponent.getElement();
-  renderElement(mainElement, sortingListElement, RenderPosition.BEFORE_END);
+  render(mainElement, sortingListElement, RenderPosition.BEFORE_END);
 
   sortings.forEach((item) => {
     const sortingComponent = new SortingElementView(item.type, item.films);
 
-    renderElement(sortingListElement, sortingComponent.getElement(), RenderPosition.BEFORE_END);
+    render(sortingListElement, sortingComponent, RenderPosition.BEFORE_END);
     sortingComponent.setClickHandler(activateSorting);
   });
 
@@ -182,13 +180,13 @@ const renderSortingList = () => {
   initialSortingActiveElement.querySelector(`.sort__button`).classList.add(`sort__button--active`);
 };
 
-renderElement(headerElement, new HeaderProfileView().getElement(), RenderPosition.BEFORE_END);
+render(headerElement, new HeaderProfileView(), RenderPosition.BEFORE_END);
 
-renderElement(mainElement, new NavigationView().getElement(films.length), RenderPosition.BEFORE_END);
+render(mainElement, new NavigationView(films.length), RenderPosition.BEFORE_END);
 
 renderSortingList();
 
-renderElement(mainElement, new FilmsMainListView().getElement(), RenderPosition.BEFORE_END);
+render(mainElement, new FilmsMainListView(), RenderPosition.BEFORE_END);
 
 const filmsElement = mainElement.querySelector(`.films`);
 const filmsMainListElement = filmsElement.querySelector(`.films-list`);
@@ -199,4 +197,4 @@ renderExtraList(new MostCommentedListView().getElement(), getSortOfCommentsCount
 
 const footerStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
-renderElement(footerStatisticsElement, new StatisticsView(films.length).getElement(), RenderPosition.BEFORE_END);
+render(footerStatisticsElement, new StatisticsView(films.length), RenderPosition.BEFORE_END);

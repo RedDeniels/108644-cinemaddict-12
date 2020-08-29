@@ -1,5 +1,6 @@
 import AbstractView from "./abstract";
-import {getMonthName, getDurationString} from "../utils";
+import {getMonthName, getDurationString} from "../utils/common";
+import {remove} from "../utils/render";
 import {KEY_ESC} from "../const";
 
 export default class FilmDetails extends AbstractView {
@@ -150,14 +151,14 @@ export default class FilmDetails extends AbstractView {
     }
 
     this._callback.closeClick(this.getFilmCard(), this.getElement());
-    this.removeElement();
+    remove(this);
     this.removeCloseClickHandler();
   }
 
   _closeClickHandler(evt) {
     evt.preventDefault();
     this._callback.closeClick(this.getFilmCard(), this.getElement());
-    this.removeElement();
+    remove(this);
     this.removeCloseClickHandler();
   }
 

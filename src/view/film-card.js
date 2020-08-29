@@ -1,5 +1,5 @@
 import AbstractView from "./abstract";
-import {getDurationString} from "../utils";
+import {getDurationString} from "../utils/common";
 
 const DESCRIPTION_LENGTH = 140;
 
