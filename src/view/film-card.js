@@ -1,12 +1,14 @@
-import {getDurationString, createElement} from "../utils";
+import AbstractView from "./abstract";
+import {getDurationString} from "../utils";
 
 const DESCRIPTION_LENGTH = 140;
 
 const cropDescription = (description) => (description.length > DESCRIPTION_LENGTH ? description.slice(0, DESCRIPTION_LENGTH - 1) + `...` : description);
 
-export default class FilmCard {
+export default class FilmCard extends AbstractView {
   constructor(film) {
-    this._element = null;
+    super();
+
     this._film = film;
   }
 
@@ -30,17 +32,5 @@ export default class FilmCard {
         </form>
       </article>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,8 +1,9 @@
-import {createElement} from "../utils";
+import AbstractView from "./abstract";
 
-export default class Statistics {
+export default class Statistics extends AbstractView {
   constructor(count) {
-    this._element = null;
+    super();
+
     this._count = count;
   }
 
@@ -10,17 +11,5 @@ export default class Statistics {
     return (
       `<p>${this._count} inside</p>`
     );
-  }
-
-  getElement(count) {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate(count));
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

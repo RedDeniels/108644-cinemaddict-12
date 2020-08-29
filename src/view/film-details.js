@@ -1,8 +1,10 @@
-import {createElement, getMonthName, getDurationString} from "../utils";
+import AbstractView from "./abstract";
+import {getMonthName, getDurationString} from "../utils";
 
-export default class FilmDetails {
+export default class FilmDetails extends AbstractView {
   constructor(film) {
-    this._element = null;
+    super();
+
     this._film = film;
   }
 
@@ -124,18 +126,6 @@ export default class FilmDetails {
         </form>
       </section>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

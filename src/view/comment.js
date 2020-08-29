@@ -10,6 +10,11 @@ const getDateString = (date) => {
 };
 
 export default class Comment extends AbstractView {
+  constructor(comment) {
+    super();
+
+    this._comment = comment;
+  }
   getTemplate() {
     return (
       `<li class="film-details__comment">
