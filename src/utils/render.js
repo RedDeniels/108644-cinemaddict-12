@@ -5,7 +5,7 @@ export const RenderPosition = {
   BEFORE_END: `BEFORE_END`
 };
 
-export const render = (container, child, place) => {
+export const render = (container, child, place = RenderPosition.BEFORE_END) => {
   if (container instanceof Abstract) {
     container = container.getElement();
   }
@@ -22,6 +22,13 @@ export const render = (container, child, place) => {
       container.append(child);
       break;
   }
+};
+
+export const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
 };
 
 export const remove = (component) => {

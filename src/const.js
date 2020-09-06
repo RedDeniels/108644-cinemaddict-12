@@ -18,3 +18,9 @@ export const MIN_IN_HOUR = 60;
 export const CssClass = {
   HIDDEN: `visually-hidden`,
 };
+
+export const SortType = {
+  DEFAULT: `default`,
+  DATE: `date`,
+  RATING: `rating`,
+};
