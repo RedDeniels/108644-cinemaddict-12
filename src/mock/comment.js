@@ -1,4 +1,4 @@
-import {getRandomItem, getRandomNumber} from "../utils";
+import {getRandomItem, getRandomNumber} from "../utils/common";
 
 const TEXTS = [
   `You must watch this now and with no hesitation.`,

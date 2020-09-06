@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import AbstractView from "./abstract";
 import {CssClass} from "../const";
 
 const Title = {
@@ -6,9 +6,10 @@ const Title = {
   EMPTY: `There are no movies in our database`,
 };
 
-export default class FilmsListTitle {
+export default class FilmsListTitle extends AbstractView {
   constructor(isFilled) {
-    this._element = null;
+    super();
+
     this._isFilled = isFilled;
   }
 
@@ -16,17 +17,5 @@ export default class FilmsListTitle {
     return (
       `<h2 class="films-list__title ${this._isFilled ? CssClass.HIDDEN : ``}">${this._isFilled ? Title.FILLED : Title.EMPTY}</h2>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

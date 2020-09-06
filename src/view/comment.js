@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import AbstractView from "./abstract";
 
 const getDateString = (date) => {
   const year = date.getFullYear();
@@ -9,12 +9,12 @@ const getDateString = (date) => {
   return `${year}/${month}/${day} ${hour}:${minute}`;
 };
 
-export default class Comment {
+export default class Comment extends AbstractView {
   constructor(comment) {
-    this._element = null;
+    super();
+
     this._comment = comment;
   }
-
   getTemplate() {
     return (
       `<li class="film-details__comment">
@@ -31,17 +31,5 @@ export default class Comment {
         </div>
       </li>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -19,6 +19,8 @@ export const CssClass = {
   HIDDEN: `visually-hidden`,
 };
 
-export const RenderPosition = {
-  BEFORE_END: `beforeend`,
+export const SortType = {
+  DEFAULT: `default`,
+  DATE: `date`,
+  RATING: `rating`,
 };

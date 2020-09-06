@@ -1,26 +1,28 @@
-import {createElement} from "../utils";
+import AbstractView from "./abstract";
 
-export default class SortingElement {
-  constructor(type) {
-    this._element = null;
+export default class SortingElement extends AbstractView {
+  constructor(type, active) {
+    super();
+
     this._type = type;
+    this._active = active;
+
+    this._clickHandler = this._clickHandler.bind(this);
   }
 
   getTemplate() {
     return (
-      `<li class="sort__element sort__element--${this._type}"><a href="#" class="sort__button">Sort by ${this._type}</a></li>`
+      `<li class="sort__element sort__element--${this._type}"><a href="#" class="sort__button ${this._active ? `sort__button--active` : ``}" data-sort-type="${this._type}">Sort by ${this._type}</a></li>`
     );
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _clickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click(this._type);
   }
 
-  removeElement() {
-    this._element = null;
+  setClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`.sort__button`).addEventListener(`click`, this._clickHandler);
   }
 }

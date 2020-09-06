@@ -1,13 +1,16 @@
-import {getDurationString, createElement} from "../utils";
+import AbstractView from "./abstract";
+import {getDurationString} from "../utils/common";
 
 const DESCRIPTION_LENGTH = 140;
 
 const cropDescription = (description) => (description.length > DESCRIPTION_LENGTH ? description.slice(0, DESCRIPTION_LENGTH - 1) + `...` : description);
 
-export default class FilmCard {
+export default class FilmCard extends AbstractView {
   constructor(film) {
-    this._element = null;
+    super();
+
     this._film = film;
+    this._openClickHandler = this._openClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -32,15 +35,33 @@ export default class FilmCard {
     );
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  getFilm() {
+    return this._film;
   }
 
-  removeElement() {
-    this._element = null;
+  getActiveElements() {
+    const filmPosterElement = this.getElement().querySelector(`.film-card__poster`);
+    const filmTitleElement = this.getElement().querySelector(`.film-card__title`);
+    const filmCommentsCountElement = this.getElement().querySelector(`.film-card__comments`);
+    return [filmPosterElement, filmTitleElement, filmCommentsCountElement];
+  }
+
+  removeOpenClickHandler() {
+    for (const filmActiveElement of this.getActiveElements()) {
+      filmActiveElement.removeEventListener(`click`, this._openClickHandler);
+    }
+  }
+
+  _openClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.openClick(this);
+    this.removeOpenClickHandler();
+  }
+
+  setOpenClickHandler(callback) {
+    this._callback.openClick = callback;
+    for (const filmActiveElement of this.getActiveElements()) {
+      filmActiveElement.addEventListener(`click`, this._openClickHandler);
+    }
   }
 }

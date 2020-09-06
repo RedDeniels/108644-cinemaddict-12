@@ -1,19 +1,4 @@
-import {MONTHS, MIN_IN_HOUR, RenderPosition} from "./const";
-
-export const renderElement = (container, element, place) => {
-  switch (place) {
-    case RenderPosition.BEFORE_END:
-      container.append(element);
-      break;
-  }
-};
-
-export const createElement = (template) => {
-  const newElement = document.createElement(`div`);
-  newElement.innerHTML = template;
-
-  return newElement.firstChild;
-};
+import {MIN_IN_HOUR, MONTHS} from "../const";
 
 export const getRandomNumber = (min = 0, max = 1, approximation = 0) => Number((Math.random() * (max - min) + min).toFixed(approximation));
 
@@ -28,12 +13,6 @@ export const getRandomSubarray = (originalArray, count) => {
     subArray.splice(subArray.indexOf(randomItem), 1);
   }
   return newList;
-};
-
-export const renderItemsElements = (container, items, View) => {
-  for (const item of items) {
-    renderElement(container, new View(item).getElement(), RenderPosition.BEFORE_END);
-  }
 };
 
 export const compareArrays = (arr1, arr2) => arr1.length === arr2.length && arr1.every((value, index) => (value === arr2[index]));
