@@ -75,20 +75,22 @@ export default class MovieList {
 
   _closeFilmDetails(filmComponent, filmDetailsElement) {
     this._footerElement.removeChild(filmDetailsElement);
-    filmComponent.setOpenClickHandler(this._filmsElementsClick.bind(this));
+    filmComponent.setOpenClickHandler(this._filmDetailsOpen.bind(this));
   }
 
-  _filmsElementsClick(filmComponent) {
+  _filmDetailsOpen(filmComponent) {
     const filmDetails = this._renderFilmDetails(filmComponent.getFilm());
     filmDetails.setFilmCard(filmComponent);
 
     filmDetails.setCloseClickHandler(this._closeFilmDetails.bind(this));
+    filmDetails.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, filmDetails._closeClickHandler);
+    document.addEventListener(`keydown`, filmDetails._escPushHandler);
   }
 
   _renderFilm(container, film) {
     const filmCardComponent = new FilmCardView(film);
     render(container, filmCardComponent);
-    filmCardComponent.setOpenClickHandler(this._filmsElementsClick.bind(this));
+    filmCardComponent.setOpenClickHandler(this._filmDetailsOpen.bind(this));
   }
 
   _renderFilms(container, films, from, to) {
@@ -143,19 +145,27 @@ export default class MovieList {
     this._renderFilms(containerComponent, extraSortedList, 0, FilmsCount.EXTRA);
   }
 
-  _getSortOfPropertyFilms(property) {
-    const sortFilms = [...this._films].sort((item, itemNext) => (item[property] - itemNext[property]));
-    return sortFilms.filter((item) => (item[property] > 0));
+  _getFilmsHasProperty(films, property) {
+    return films.filter((film) => (film[property] > 0));
   }
 
-  _getSortOfCommentsCountFilms() {
-    const sortFilms = [...this._films].sort((item, itemNext) => (item.comments.length) - itemNext.comments.length);
-    return sortFilms.filter((item) => (item.comments.length));
+  _getSortOfPropertyFilms(films, property) {
+    return [...films].sort((film, filmNext) => (film[property] - filmNext[property]));
+  }
+
+  _getFilmsWithComments(films) {
+    return films.filter((film) => (film.comments.length));
+  }
+
+  _getSortOfCommentsCountFilms(films) {
+    return [...films].sort((film, filmNext) => (film.comments.length) - filmNext.comments.length);
   }
 
   _renderExtraLists() {
-    this._renderExtraList(this._topRatedListComponent, this._filmsTopRatedListContainerComponent, this._getSortOfPropertyFilms(`rating`));
-    this._renderExtraList(this._mostCommentedListComponent, this._filmsMostCommentedListContainerComponent, this._getSortOfCommentsCountFilms());
+    const filmsSortedByComments = this._getSortOfCommentsCountFilms(this._films);
+    const filmsSortedByRating = this._getFilmsHasProperty(this._films, `rating`);
+    this._renderExtraList(this._topRatedListComponent, this._filmsTopRatedListContainerComponent, this._getSortOfPropertyFilms(filmsSortedByRating, `rating`));
+    this._renderExtraList(this._mostCommentedListComponent, this._filmsMostCommentedListContainerComponent, this._getFilmsWithComments(filmsSortedByComments));
   }
 
   _sortFilms(sortType) {
